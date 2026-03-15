@@ -347,9 +347,10 @@ def inject_settings():
         c.execute('SELECT * FROM settings WHERE id = 1')
         setting = c.fetchone()
         conn.close()
-        return dict(system_settings=setting)
-    except:
-        return dict(system_settings=None)
+        return dict(system_settings=setting if setting else {})
+    except Exception as e:
+        print(f"Context Processor Error: {e}")
+        return dict(system_settings={})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
