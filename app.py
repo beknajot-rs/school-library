@@ -6,11 +6,20 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 app.secret_key = 'super_secret_key_for_library'
 
-# Initialize database on startup
+# Initialize database on startup module loading
 try:
     database.init_db()
 except Exception as e:
     print(f"Error initializing database: {e}")
+
+@app.before_request
+def setup_database_on_request():
+    """Ensure database tables exist before handling any request in serverless."""
+    try:
+        database.init_db()
+    except Exception as e:
+        print(f"Serverless DB Init Error: {e}")
+
 
 @app.route('/')
 def dashboard():
