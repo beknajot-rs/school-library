@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h2 style="font-size: 1.5rem; font-weight: 700;">Kitob berish</h2>
+        <p style="color: var(--text-secondary);">O'quvchiga yangi kitob ijarasini rasmiylashtirish.</p>
+    </div>
+</div>
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <div style="background: var(--bg-card); border-radius: var(--radius-2xl); box-shadow: var(--shadow-md); border: var(--glass-border); padding: 2.5rem; position: relative; overflow: hidden;">
+        
+        <!-- Decorative bg -->
+        <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(79, 70, 229, 0.05); border-radius: 50%; z-index: 0;"></div>
+        
+        <form action="{{ url_for('issue_book') }}" method="POST" style="position: relative; z-index: 1;">
+            
+            <!-- Step 1 -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--primary-color);">
+                    <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">1</span>
+                    O'quvchini tanlang
+                </h3>
+                <div style="position: relative;">
+                    <i class='bx bx-user' style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); font-size: 1.25rem; z-index: 2;"></i>
+                    <select name="student_id" required style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid var(--border-color); border-radius: var(--radius-lg); background: var(--bg-main); color: var(--text-primary); font-family: inherit; font-size: 1rem; transition: var(--transition); appearance: none; position: relative;">
+                        <option value="">O'quvchini tanlang...</option>
+                        {% for s in students %}
+                        <option value="{{ s.id }}">{{ s.full_name }} (ID: {{ s.student_id }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--primary-color);">
+                    <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">2</span>
+                    Kitobni tanlang
+                </h3>
+                <div style="position: relative;">
+                    <i class='bx bx-book' style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); font-size: 1.25rem; z-index: 2;"></i>
+                    <select name="book_id" required style="width: 100%; padding: 1rem 1rem 1rem 3rem; border: 1px solid var(--border-color); border-radius: var(--radius-lg); background: var(--bg-main); color: var(--text-primary); font-family: inherit; font-size: 1rem; transition: var(--transition); appearance: none; position: relative;">
+                        <option value="">Kitobni tanlang...</option>
+                        {% for b in books %}
+                        <option value="{{ b.id }}">{{ b.title }} (INV: {{ b.inventory_number }}) - Mavjud: {{ b.available_copies }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div style="margin-bottom: 2.5rem; padding: 1.5rem; background: rgba(79, 70, 229, 0.03); border-radius: var(--radius-lg); border: 1px dashed var(--primary-light);">
+                <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--primary-color);">
+                    <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">3</span>
+                    Qaytarish muddatini belgilang
+                </h3>
+                
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Standart muddat: <strong style="color: var(--text-primary);">14 kun</strong></p>
+                        <p style="font-size: 0.875rem; color: var(--text-secondary);">Kutilyotgan qaytarish sanasi: <strong style="color: var(--primary-dark);" id="expectedDate"></strong></p>
+                    </div>
+                    
+                    <div>
+                        <input type="date" name="due_date" required id="dueDateInput" style="padding: 0.75rem 1rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-main); color: var(--text-primary); font-family: inherit; font-size: 1rem;">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" style="width: 100%; padding: 1.25rem; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; border: none; border-radius: var(--radius-lg); font-family: inherit; font-size: 1.125rem; font-weight: 600; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); transition: transform 0.2s, box-shadow 0.2s; display: flex; justify-content: center; align-items: center; gap: 0.5rem;" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
+                <i class='bx bx-check-circle' style="font-size: 1.5rem;"></i> Kitobni berish
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Autofill the due date logic
+    document.addEventListener("DOMContentLoaded", function() {
+        const today = new Date();
+        const dueDate = new Date(today);
+        dueDate.setDate(dueDate.getDate() + 14); // 14 days default
+        
+        const yyyy = dueDate.getFullYear();
+        const mm = String(dueDate.getMonth() + 1).padStart(2, '0');
+        const dd = String(dueDate.getDate()).padStart(2, '0');
+        
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
+        document.getElementById('dueDateInput').value = formattedDate;
+        
+        const displayFormat = `${dd}.${mm}.${yyyy}`;
+        document.getElementById('expectedDate').innerText = displayFormat;
+        
+        document.getElementById('dueDateInput').addEventListener('change', function(e) {
+            const dateObj = new Date(e.target.value);
+            const dStr = String(dateObj.getDate()).padStart(2, '0') + '.' + String(dateObj.getMonth() + 1).padStart(2, '0') + '.' + dateObj.getFullYear();
+            document.getElementById('expectedDate').innerText = dStr;
+        });
+    });
+</script>
+{% endblock %}
