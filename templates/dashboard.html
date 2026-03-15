@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="dashboard-header" style="margin-bottom: 2rem;">
+    <h2 style="font-size: 1.5rem; font-weight: 700;">Bugungi holat bir nazar bilan</h2>
+    <p style="color: var(--text-secondary);">Kutubxonadagi asosiy ko'rsatkichlar.</p>
+</div>
+
+<!-- Widgets -->
+<div class="grid-cards">
+    <div class="stat-card">
+        <div class="stat-icon"><i class='bx bx-book-bookmark'></i></div>
+        <div class="stat-details">
+            <h3 class="stat-title">Jami kitoblar</h3>
+            <div class="stat-value">{{ total_books }}</div>
+        </div>
+    </div>
+    
+    <div class="stat-card val-issued">
+        <div class="stat-icon"><i class='bx bx-book-reader'></i></div>
+        <div class="stat-details">
+            <h3 class="stat-title">Hozir berilib turilgan</h3>
+            <div class="stat-value">{{ currently_issued }}</div>
+        </div>
+    </div>
+    
+    <div class="stat-card val-today-out">
+        <div class="stat-icon"><i class='bx bx-export'></i></div>
+        <div class="stat-details">
+            <h3 class="stat-title">Bugun berildi</h3>
+            <div class="stat-value">{{ issued_today }}</div>
+        </div>
+    </div>
+    
+    <div class="stat-card val-today-in">
+        <div class="stat-icon"><i class='bx bx-import'></i></div>
+        <div class="stat-details">
+            <h3 class="stat-title">Bugun qaytarildi</h3>
+            <div class="stat-value">{{ returned_today }}</div>
+        </div>
+    </div>
+    
+    <div class="stat-card val-danger">
+        <div class="stat-icon"><i class='bx bx-error'></i></div>
+        <div class="stat-details">
+            <h3 class="stat-title">Muddati o'tgan</h3>
+            <div class="stat-value">{{ overdue_count }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Table -->
+<div class="table-container">
+    <div class="table-header">
+        <h3 class="table-title">Oxirgi ijaralar</h3>
+        <button style="padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: var(--radius-md); font-family: inherit; font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: background 0.2s;">
+            Barchasini ko'rish <i class='bx bx-right-arrow-alt'></i>
+        </button>
+    </div>
+    <div style="overflow-x: auto;">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>O'quvchi</th>
+                    <th>Kitob</th>
+                    <th>Berilgan sana</th>
+                    <th>Qaytarish muddati</th>
+                    <th>Holati</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in recent_loans %}
+                <tr>
+                    <td style="font-weight: 500;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600;">
+                                {{ loan.student_name[0] }}
+                            </div>
+                            {{ loan.student_name }}
+                        </div>
+                    </td>
+                    <td>{{ loan.book_title }}</td>
+                    <td>{{ loan.issue_date }}</td>
+                    <td>{{ loan.due_date }}</td>
+                    <td>
+                        {% if loan.status == 'Faol' %}
+                            <!-- Check if overdue dynamically for UI -->
+                            {% if loan.due_date < today_date_str %}
+                                <span class="status-badge status-overdue"><i class='bx bxs-circle' style="font-size: 6px; margin-right: 4px;"></i> Muddati o'tdi</span>
+                            {% else %}
+                                <span class="status-badge status-active"><i class='bx bxs-circle' style="font-size: 6px; margin-right: 4px;"></i> Faol</span>
+                            {% endif %}
+                        {% elif loan.status == 'Yakunlandi' %}
+                            <span class="status-badge status-completed"><i class='bx bxs-circle' style="font-size: 6px; margin-right: 4px;"></i> Yakunlandi</span>
+                        {% else %}
+                            <span class="status-badge status-warning"><i class='bx bxs-circle' style="font-size: 6px; margin-right: 4px;"></i> {{ loan.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 2rem; color: var(--text-tertiary);">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;"><i class='bx bx-data'></i></div>
+                        Hozircha ma'lumot yo'q. Tizimga yangi ijaralar kiriting.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
