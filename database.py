@@ -1,8 +1,11 @@
 import sqlite3
 import os
-from datetime import datetime
 
-DB_PATH = 'library.db'
+# Use /tmp for Vercel's serverless environment, otherwise use local directory
+if os.environ.get('VERCEL'):
+    DB_PATH = '/tmp/library.db'
+else:
+    DB_PATH = 'library.db'
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
