@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h2 style="font-size: 1.5rem; font-weight: 700;">Hisobotlar va statistika</h2>
+        <p style="color: var(--text-secondary);">Kutubxona faoliyati bo'yicha tahliliy ma'lumotlar.</p>
+    </div>
+    
+    <div style="display: flex; gap: 1rem;">
+        <button style="padding: 0.75rem 1.5rem; background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid var(--success); border-radius: var(--radius-md); font-family: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;">
+            <i class='bx bx-file'></i> Excel yuklab olish
+        </button>
+        <button style="padding: 0.75rem 1.5rem; background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); border-radius: var(--radius-md); font-family: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s;">
+            <i class='bx bxs-file-pdf'></i> PDF yuklab olish
+        </button>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    
+    <!-- Chart 1: Oylik faollik -->
+    <div style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); border: var(--glass-border);">
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">Oylik faollik (Kitob berish va qabul)</h3>
+        
+        <!-- Placeholder for chart -->
+        <div style="height: 300px; display: flex; align-items: flex-end; justify-content: space-around; padding-bottom: 2rem; position: relative; border-bottom: 1px solid var(--border-color); border-left: 1px solid var(--border-color);">
+            <div style="width: 40px; height: 40%; background: linear-gradient(to top, var(--primary-dark), var(--primary-light)); border-radius: 4px 4px 0 0; position: relative; margin: 0 5px;"></div>
+            <div style="width: 40px; height: 60%; background: linear-gradient(to top, var(--primary-dark), var(--primary-light)); border-radius: 4px 4px 0 0; position: relative; margin: 0 5px;"></div>
+            <div style="width: 40px; height: 30%; background: linear-gradient(to top, var(--primary-dark), var(--primary-light)); border-radius: 4px 4px 0 0; position: relative; margin: 0 5px;"></div>
+            <div style="width: 40px; height: 80%; background: linear-gradient(to top, var(--primary-dark), var(--primary-light)); border-radius: 4px 4px 0 0; position: relative; margin: 0 5px;"></div>
+            <div style="width: 40px; height: 50%; background: linear-gradient(to top, var(--primary-dark), var(--primary-light)); border-radius: 4px 4px 0 0; position: relative; margin: 0 5px;"></div>
+            <div style="width: 40px; height: 90%; background: linear-gradient(to top, var(--primary-dark), var(--primary-light)); border-radius: 4px 4px 0 0; position: relative; margin: 0 5px;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-around; margin-top: 1rem; color: var(--text-secondary); font-size: 0.75rem;">
+            <span>Okt</span><span>Noy</span><span>Dek</span><span>Yan</span><span>Fev</span><span>Mar</span>
+        </div>
+    </div>
+
+    <!-- Chart 2: Sinf bo'yicha faollik -->
+    <div style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); border: var(--glass-border);">
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-primary);">Sinf bo'yicha faollik</h3>
+        
+        <!-- Placeholder for pie chart using CSS -->
+        <div style="display: flex; justify-content: center; align-items: center; height: 250px;">
+            <div style="width: 180px; height: 180px; border-radius: 50%; background: conic-gradient(var(--info) 0% 30%, var(--success) 30% 60%, var(--warning) 60% 85%, var(--primary-color) 85% 100%);"></div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1rem; font-size: 0.75rem; color: var(--text-secondary);">
+            <div style="display: flex; align-items: center; gap: 0.5rem;"><div style="width: 10px; height: 10px; background: var(--info); border-radius: 50%;"></div> 1-4 sinflar</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;"><div style="width: 10px; height: 10px; background: var(--success); border-radius: 50%;"></div> 5-9 sinflar</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;"><div style="width: 10px; height: 10px; background: var(--warning); border-radius: 50%;"></div> 10-11 sinflar</div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;"><div style="width: 10px; height: 10px; background: var(--primary-color); border-radius: 50%;"></div> O'qituvchilar</div>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+    <!-- Top 10 Books -->
+    <div class="table-container" style="margin-bottom: 0;">
+        <div class="table-header">
+            <h3 class="table-title">Eng ko'p o'qilgan kitoblar (TOP-10)</h3>
+        </div>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Kitob nomi</th>
+                    <th>Ijara soni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in top_books %}
+                <tr>
+                    <td style="font-weight: 700; color: {% if loop.index == 1 %}var(--warning){% elif loop.index == 2 %}var(--primary-color){% elif loop.index == 3 %}#CD7F32{% else %}var(--text-tertiary){% endif %};">{{ loop.index }}</td>
+                    <td style="font-weight: 500;">{{ b.title }}</td>
+                    <td>{{ b.borrow_count }} marta</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--text-tertiary);">Kutubxonada ijara tarixi yo'q.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Top 10 Students -->
+    <div class="table-container" style="margin-bottom: 0;">
+        <div class="table-header">
+            <h3 class="table-title">Eng faol o'quvchilar (TOP-10)</h3>
+        </div>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>O'quvchi</th>
+                    <th>O'qilgan kitoblar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in top_students %}
+                <tr>
+                    <td style="font-weight: 700; color: {% if loop.index == 1 %}var(--warning){% elif loop.index == 2 %}var(--primary-color){% elif loop.index == 3 %}#CD7F32{% else %}var(--text-tertiary){% endif %};">{{ loop.index }}</td>
+                    <td style="font-weight: 500;">{{ s.full_name }} ({{ s.grade_level }})</td>
+                    <td>{{ s.read_count }} ta element</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3" style="text-align:center; padding: 2rem; color: var(--text-tertiary);">Faol o'quvchilar yo'q.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
