@@ -342,15 +342,45 @@ def settings():
 @app.context_processor
 def inject_settings():
     try:
+        from datetime import datetime
         conn = database.get_db_connection()
         c = conn.cursor()
         c.execute('SELECT * FROM settings WHERE id = 1')
         setting = c.fetchone()
+        
+        today_str = datetime.now().strftime('%Y-%m-%d')
+        c.execute('''
+            SELECT loans.id, books.title, students.first_name, students.last_name, loans.due_date 
+            FROM loans 
+            JOIN books ON loans.book_id = books.id 
+            JOIN students ON loans.student_id = students.id 
+            WHERE loans.status = 'Faol' AND loans.due_date < ? AND loans.return_date IS NULL
+            ORDER BY loans.due_date ASC LIMIT 5
+        ''', (today_str,))
+        
+        overdue_items = c.fetchall()
+        notifications = []
+        for item in overdue_items:
+            notifications.append({
+                'title': f"{item['first_name']} {item['last_name']}",
+                'message': f"\"{item['title']}\" kitobi muddati o'tgan ({item['due_date']})",
+                'type': 'warning',
+                'link': '/overdue'
+            })
+            
+        c.execute('SELECT COUNT(*) FROM loans WHERE status = "Faol" AND due_date < ? AND return_date IS NULL', (today_str,))
+        res = c.fetchone()
+        notif_count = res[0] if res else 0
+
         conn.close()
-        return dict(system_settings=setting if setting else {})
+        return dict(
+            system_settings=setting if setting else {},
+            notifications=notifications,
+            notification_count=notif_count
+        )
     except Exception as e:
         print(f"Context Processor Error: {e}")
-        return dict(system_settings={})
+        return dict(system_settings={}, notifications=[], notification_count=0)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
