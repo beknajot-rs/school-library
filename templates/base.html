@@ -102,10 +102,44 @@
                         <i class='bx bx-search'></i>
                         <input type="text" placeholder="Global qidiruv...">
                     </div>
-                    <button class="icon-btn notification-btn">
-                        <i class='bx bx-bell'></i>
-                        <span class="badge">3</span>
-                    </button>
+                    <div class="notification-wrapper" style="position: relative;">
+                        <button class="icon-btn notification-btn" id="notif-toggle">
+                            <i class='bx bx-bell'></i>
+                            {% if notification_count > 0 %}
+                            <span class="badge">{{ notification_count }}</span>
+                            {% endif %}
+                        </button>
+                        
+                        <div class="notification-dropdown" id="notif-dropdown">
+                            <div class="notif-header">
+                                <h4>Bildirishnomalar</h4>
+                                {% if notification_count > 0 %}
+                                <span class="notif-count">{{ notification_count }} ta yangi</span>
+                                {% endif %}
+                            </div>
+                            <div class="notif-body">
+                                {% if notifications %}
+                                    {% for notif in notifications %}
+                                    <a href="{{ notif.link }}" class="notif-item">
+                                        <div class="notif-icon {{ notif.type }}"><i class='bx bx-error'></i></div>
+                                        <div class="notif-content">
+                                            <p class="notif-title">{{ notif.title }}</p>
+                                            <p class="notif-desc">{{ notif.message }}</p>
+                                        </div>
+                                    </a>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="notif-empty">
+                                        <i class='bx bx-check-circle'></i>
+                                        <p>Yangi bildirishnomalar yo'q</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="notif-footer">
+                                <a href="{{ url_for('overdue') }}">Barchasini ko'rish</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="theme-switch">
                         <input type="checkbox" id="theme-toggle">
                         <label for="theme-toggle" class="theme-label">
@@ -130,6 +164,21 @@
         document.getElementById('sidebar-toggle').addEventListener('click', function() {
             document.querySelector('.sidebar').classList.toggle('collapsed');
         });
+
+        // Notification toggle
+        const notifBtn = document.getElementById('notif-toggle');
+        const notifDropdown = document.getElementById('notif-dropdown');
+        if (notifBtn && notifDropdown) {
+            notifBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notifDropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', function(e) {
+                if (!notifDropdown.contains(e.target)) {
+                    notifDropdown.classList.remove('show');
+                }
+            });
+        }
 
         // Theme toggle mechanism (simple implementation)
         const themeToggle = document.getElementById('theme-toggle');
