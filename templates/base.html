@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Kutubxona boshqaruv paneli</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Boxicons for icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class='bx bx-book-reader logo-icon'></i>
+                <span class="logo-text">Kutubxona.Pro</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                            <i class='bx bx-home-alt'></i>
+                            <span>Bosh sahifa</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('books') }}" class="nav-link {% if request.endpoint == 'books' %}active{% endif %}">
+                            <i class='bx bx-book'></i>
+                            <span>Kitoblar</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('students') }}" class="nav-link {% if request.endpoint == 'students' %}active{% endif %}">
+                            <i class='bx bx-user'></i>
+                            <span>O'quvchilar</span>
+                        </a>
+                    </li>
+                    <div class="nav-divider">Harakatlar</div>
+                    <li class="nav-item">
+                        <a href="{{ url_for('issue_book') }}" class="nav-link {% if request.endpoint == 'issue_book' %}active{% endif %}">
+                            <i class='bx bx-export'></i>
+                            <span>Kitob berish</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('return_book') }}" class="nav-link {% if request.endpoint == 'return_book' %}active{% endif %}">
+                            <i class='bx bx-import'></i>
+                            <span>Kitob qaytarish</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('overdue') }}" class="nav-link {% if request.endpoint == 'overdue' %}active{% endif %}">
+                            <i class='bx bx-error-alt warning-color'></i>
+                            <span class="warning-color">Muddati o'tganlar</span>
+                        </a>
+                    </li>
+                    <div class="nav-divider">Tizim</div>
+                    <li class="nav-item">
+                        <a href="{{ url_for('reports') }}" class="nav-link {% if request.endpoint == 'reports' %}active{% endif %}">
+                            <i class='bx bx-bar-chart-alt-2'></i>
+                            <span>Hisobotlar</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('settings') }}" class="nav-link {% if request.endpoint == 'settings' %}active{% endif %}">
+                            <i class='bx bx-cog'></i>
+                            <span>Sozlamalar</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="user-avatar">
+                        <i class='bx bx-user-circle'></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Kutubxonachi</span>
+                        <span class="user-role">Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button id="sidebar-toggle" class="icon-btn">
+                        <i class='bx bx-menu'></i>
+                    </button>
+                    <h1 class="page-title">{{ title }}</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <i class='bx bx-search'></i>
+                        <input type="text" placeholder="Global qidiruv...">
+                    </div>
+                    <button class="icon-btn notification-btn">
+                        <i class='bx bx-bell'></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <div class="theme-switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <label for="theme-toggle" class="theme-label">
+                            <i class='bx bx-moon'></i>
+                            <i class='bx bx-sun'></i>
+                            <div class="ball"></div>
+                        </label>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                {% block content %}{% endblock %}
+            </div>
+            
+        </main>
+    </div>
+
+    <!-- Main Javascript setup -->
+    <script>
+        // Sidebar toggle
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+
+        // Theme toggle mechanism (simple implementation)
+        const themeToggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.checked = true;
+        }
+
+        themeToggle.addEventListener('change', function(e) {
+            if(e.target.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
