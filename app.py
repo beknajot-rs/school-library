@@ -7,7 +7,10 @@ app = Flask(__name__)
 app.secret_key = 'super_secret_key_for_library'
 
 # Initialize database on startup
-database.init_db()
+try:
+    database.init_db()
+except Exception as e:
+    print(f"Error initializing database: {e}")
 
 @app.route('/')
 def dashboard():
@@ -20,20 +23,24 @@ def dashboard():
     
     # Get currently issued
     c.execute('SELECT COUNT(*) FROM loans WHERE status = "Faol" AND return_date IS NULL')
-    currently_issued = c.fetchone()[0]
+    res = c.fetchone()
+    currently_issued = res[0] if res else 0
     
     today_str = datetime.now().strftime('%Y-%m-%d')
     # Get issued today
     c.execute('SELECT COUNT(*) FROM loans WHERE issue_date = ?', (today_str,))
-    issued_today = c.fetchone()[0]
+    res = c.fetchone()
+    issued_today = res[0] if res else 0
     
     # Get returned today
     c.execute('SELECT COUNT(*) FROM loans WHERE return_date = ?', (today_str,))
-    returned_today = c.fetchone()[0]
+    res = c.fetchone()
+    returned_today = res[0] if res else 0
     
     # Get overdue
     c.execute('SELECT COUNT(*) FROM loans WHERE status = "Faol" AND due_date < ? AND return_date IS NULL', (today_str,))
-    overdue_count = c.fetchone()[0]
+    res = c.fetchone()
+    overdue_count = res[0] if res else 0
     
     # Recent loans for table
     c.execute('''
@@ -93,7 +100,8 @@ def books():
     for b in all_books:
         book_dict = dict(b)
         c.execute('SELECT COUNT(*) FROM loans WHERE book_id = ? AND status = "Faol" AND return_date IS NULL', (b['id'],))
-        issued_count = c.fetchone()[0]
+        res = c.fetchone()
+        issued_count = res[0] if res else 0
         book_dict['available_copies'] = book_dict['total_copies'] - issued_count
         books_data.append(book_dict)
         
@@ -141,10 +149,12 @@ def students():
     for s in all_students:
         s_dict = dict(s)
         c.execute('SELECT COUNT(*) FROM loans WHERE student_id = ? AND status = "Faol" AND return_date IS NULL', (s['id'],))
-        s_dict['active_loans'] = c.fetchone()[0]
+        res1 = c.fetchone()
+        s_dict['active_loans'] = res1[0] if res1 else 0
         
         c.execute('SELECT COUNT(*) FROM loans WHERE student_id = ? AND status = "Faol" AND due_date < ? AND return_date IS NULL', (s['id'], today_str))
-        s_dict['overdue_loans'] = c.fetchone()[0]
+        res2 = c.fetchone()
+        s_dict['overdue_loans'] = res2[0] if res2 else 0
         
         students_data.append(s_dict)
         
